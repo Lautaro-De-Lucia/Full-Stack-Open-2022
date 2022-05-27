@@ -11,10 +11,6 @@ import Notification from './components/Notification'
 
 const App = () => {
 
-  //  STATE HOOKS DEFINITIONS (Things whose state will change in execution of the React app)
-      //  By definition, hooks will provide state to react components
-      //  Basically, Our components will hold 'hook' variables that will keep their value on re-rendering
-
   const [persons, setPersons] = useState([])                //  Will Store Input 
   const [filteredPersons,setFilteredPersons] = useState([]) //  Will store Filtered Input              
   
@@ -30,27 +26,8 @@ const App = () => {
       //  Basically, effect hooks will be functions that manage things like data fetching, setting up a subscription, 
       //  manually changing the DOM in React components, and stuff of that sort.
 
-  //  Will fetch data from server at the given URL7
-  /*
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        console.log(response.data);
-        setPersons(persons.concat(response.data))
-      })
-  }
-
-  useEffect(hook,[]);   //  Will call the effect function after first render and will do so just ONCE
-*/
-
-//  We will be replacing this previous code with a .getAll() request
-//  This is not an HTTP request, but a method from the noteService component (defined in the services module) 
-//  that encapsulates the HTTP request that gets the persons
-
-//When the HTTP request is successful, the promise returns the data sent back in the response from the backend.
+// Will fetch data from server at the given URL7
+// When the HTTP request is successful, the promise returns the data sent back in the response from the backend.
 useEffect(() => {
   personsService
     .getAll()
@@ -63,37 +40,7 @@ useEffect(() => {
     //  Basically, they are functions that will be executed as a result of a 'change' in our program
     //  This may be a change of state of a component or JXL element
 
-/*
-  //  Will be triggered on submission of a new form
-  const addPerson = (event) => {
-    
-    event.preventDefault()  // Will prevent the default action of saving form input and reloading page
-    
-    //  We create a new person object
-    const personObject = {
-      name:newName,
-      number:newPhone,
-      id:persons.length+1
-    }
-
-    //  Do nothing if it already exists in phonebook
-    if(persons.some(person => (person.name) === (personObject.name))){
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-
-  axios
-    .post('http://localhost:3001/persons', personObject) // Works as an HTTP POST instruction to the server
-    .then(response => { //  response.data is the same object with its assigned id
-      setPersons(persons.concat(response.data))  // We make it so that it displays on screen
-      setNewName('')  
-      setNewPhone('')
-      //  Not only to sync our values with those in the server, but also because the change of state
-      //  will trigger the re-rendering we need so that the notes are shown on screen
-    })
-  }
-*/
-  //  And we do the same for person adding
+//  Add person to the phonebook
 const addPerson = (event) => {
   event.preventDefault()
   const personObject = {
@@ -102,7 +49,7 @@ const addPerson = (event) => {
     id:persons.length+1
   }
   //  Do nothing if it already exists in phonebook
-    if(persons.some(person => (person.name) === (personObject.name))){
+  if(persons.some(person => (person.name) === (personObject.name))){
       alert(`${newName} is already added to phonebook`)
       return
   }
@@ -122,48 +69,44 @@ const addPerson = (event) => {
 
 }
 
-//  In the same vain, the previous code gets replaced by this one
+//  delete person from phonebook
 const deletePerson = (person) => {
   if (!(window.confirm(`Delete ${person.name}?`))) {
     return;
   }
   personsService.delete_(person.id)
   setPersons(persons.filter(p => p.id !== person.id))
-  personsService.getAll()
-  .then(persons => {
-    setPersons(persons)
-  })
 }
 
   //  Will be triggered on submision of a new name -> submission of a name
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
+const handleNameChange = (event) => {
+  console.log(event.target.value)
+  setNewName(event.target.value)
+}
 
-  //  Will be triggered on submission of a new form -> submission of a phone number
-  const handlePhoneChange = (event) => {
-    console.log(event.target.value)
-    setNewPhone(event.target.value)
-  }
+//  Will be triggered on submission of a new form -> submission of a phone number
+const handlePhoneChange = (event) => {
+  console.log(event.target.value)
+  setNewPhone(event.target.value)
+}
 
-  //  Will be triggered on submission of a new filter
-  const handleFilterChange = (event) => {
-    console.log(event.target.value)
-    setNewFilter(event.target.value)
-    setFilteredPersons(persons.filter(person=>person.name.toUpperCase().includes(event.target.value.toUpperCase())))
-  }
+//  Will be triggered on submission of a new filter
+const handleFilterChange = (event) => {
+  console.log(event.target.value)
+  setNewFilter(event.target.value)
+  setFilteredPersons(persons.filter(person=>person.name.toUpperCase().includes(event.target.value.toUpperCase())))
+}
 
-  // Our React App Will:
-    //  Display a filter option for our elements 
-    //  Add a form of persons whose state can change 
-    //  Print the elements on the form
-        //  The persons array is the most important element. It's displayed on the scren through a form. 
-        //  It's state may change as a result of:
-          //   Inputting a new filter
-          //   Adding a new person 
-          //   Adding data to it extracted from an external server
-          
+// Our React App Will:
+  //  Display a filter option for our elements 
+  //  Add a form of persons whose state can change 
+  //  Print the elements on the form
+      //  The persons array is the most important element. It's displayed on the scren through a form. 
+      //  It's state may change as a result of:
+        //   Inputting a new filter
+        //   Adding a new person 
+        //   Adding data to it extracted from an external server
+        
   return (
     <div>
       <h2>Phonebook</h2> 
